@@ -7,18 +7,15 @@ from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
-from db.base import Base
 from db.fields import MoneyField, TaxedMoneyField, SanitizedJSON
 from core.config import settings
+from models.base import BaseModel
 
-class Order(Base):
+class Order(BaseModel):
     __tablename__ = 'order'
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4, unique=True)
     number = Column(Integer, unique=True)
     use_old_id = Column(Boolean, default=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, onupdate=func.now(), index=True)
     expired_at = Column(DateTime, nullable=True)
 
     status = Column(String(32), default='UNFULFILLED')
@@ -90,6 +87,3 @@ class Order(Base):
     checkout_token = Column(String(36))
     
     total_net_amount = Column(Numeric(settings.DEFAULT_MAX_DIGITS, settings.DEFAULT_DECIMAL_PLACES), default=Decimal('0.0'))
-    
-    metadata_ = Column('metadata', SanitizedJSON)
-    private_metadata = Column(SanitizedJSON)

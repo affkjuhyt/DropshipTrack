@@ -4,14 +4,13 @@ from sqlalchemy.sql import func
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
 
-from db.base import Base
 from db.fields import SanitizedJSON
 from core.config import settings
+from models.base import BaseModel
 
-class Channel(Base):
+class Channel(BaseModel):
     __tablename__ = 'channel'
 
-    id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
     is_active = Column(Boolean, default=False)
     slug = Column(String(255), unique=True)
@@ -30,7 +29,3 @@ class Channel(Base):
     automatically_complete_fully_paid_checkouts = Column(Boolean, default=False)
     draft_order_line_price_freeze_period = Column(Integer, nullable=True)
     use_legacy_line_discount_propagation_for_order = Column(Boolean, default=True)
-    metadata_ = Column('metadata', SanitizedJSON)
-    private_metadata = Column(SanitizedJSON)
-    created_at = Column(DateTime, server_default=func.now())
-    updated_at = Column(DateTime, onupdate=func.now())

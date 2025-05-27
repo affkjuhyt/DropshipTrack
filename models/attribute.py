@@ -1,14 +1,14 @@
 from sqlalchemy import Column, ForeignKey, Index, Integer
 from sqlalchemy.orm import relationship
 
-from .base import Base
+from models.base import BaseModel
+
 from .products import Product, ProductType
 
 
-class AssignedProductAttributeValue(Base):
+class AssignedProductAttributeValue(BaseModel):
     __tablename__ = 'assigned_product_attribute_values'
     
-    id = Column(Integer, primary_key=True)
     sort_order = Column(Integer)
     value_id = Column(Integer, ForeignKey('attribute_values.id'), nullable=False)
     product_id = Column(Integer, ForeignKey('products.id'), nullable=False)
@@ -25,10 +25,9 @@ class AssignedProductAttributeValue(Base):
         return self.product.attributevalues
 
 
-class AttributeProduct(Base):
+class AttributeProduct(BaseModel):
     __tablename__ = 'attribute_products'
     
-    id = Column(Integer, primary_key=True)
     sort_order = Column(Integer)
     attribute_id = Column(Integer, ForeignKey('attributes.id'), nullable=False)
     product_type_id = Column(Integer, ForeignKey('product_types.id'), nullable=False)

@@ -2,13 +2,12 @@ from sqlalchemy import Column, String, Boolean, ForeignKey, Integer
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declared_attr
 
-from .base import Base
+from models.base import BaseModel
 
 
-class Permission(Base):
+class Permission(BaseModel):
     __tablename__ = 'permissions'
 
-    id = Column(Integer, primary_key=True)
     name = Column(String(255), nullable=False)
     codename = Column(String(100), nullable=False)
     content_type_id = Column(Integer, ForeignKey('content_types.id'), nullable=False)
@@ -65,23 +64,3 @@ class PermissionsMixin:
     def has_perms(self, perm_list, obj=None):
         """Return True if the user has all of the specified permissions."""
         return all(self.has_perm(perm, obj) for perm in perm_list)
-
-
-# Association tables
-user_groups = Base.metadata.tables[
-    'user_groups'
-] = Table(
-    'user_groups',
-    Base.metadata,
-    Column('user_id', Integer, ForeignKey('users.id'), primary_key=True),
-    Column('group_id', Integer, ForeignKey('groups.id'), primary_key=True)
-)
-
-user_user_permissions = Base.metadata.tables[
-    'user_user_permissions'
-] = Table(
-    'user_user_permissions',
-    Base.metadata,
-    Column('user_id', Integer, ForeignKey('users.id'), primary_key=True),
-    Column('permission_id', Integer, ForeignKey('permissions.id'), primary_key=True)
-)

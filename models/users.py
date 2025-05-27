@@ -5,10 +5,11 @@ from sqlalchemy.dialects.postgresql import JSONB
 import uuid
 from datetime import datetime
 
-class User:
+from models.base import BaseModel
+
+class User(BaseModel):
     __tablename__ = 'users'
 
-    id = Column(Integer, primary_key=True)
     email = Column(String, unique=True, nullable=False)
     first_name = Column(String(256))
     last_name = Column(String(256))
@@ -18,7 +19,6 @@ class User:
     last_confirm_email_request = Column(DateTime)
     note = Column(Text)
     date_joined = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     last_password_reset_request = Column(DateTime)
     jwt_token_key = Column(String(12), default=lambda: str(uuid.uuid4())[:12])
     language_code = Column(String(35))
@@ -36,7 +36,3 @@ class User:
     is_superuser = Column(Boolean, default=False)
     groups = relationship("Group", secondary="user_groups", back_populates="users")
     user_permissions = relationship("Permission", secondary="user_user_permissions", back_populates="users")
-    
-    # Metadata fields
-    private_metadata = Column(JSONB, default=dict)
-    metadata = Column(JSONB, default=dict)

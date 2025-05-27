@@ -5,14 +5,14 @@ from sqlalchemy import Column, String, Boolean, ForeignKey, Numeric, Integer, Un
 from sqlalchemy.orm import relationship, validates
 from sqlalchemy.sql import expression
 
-from .base import Base
+from models.base import BaseModel
+
 from .channel import Channel
 
 
-class TaxClass(Base):
+class TaxClass(BaseModel):
     __tablename__ = 'tax_classes'
 
-    id = Column(Integer, primary_key=True)
     name = Column(String(255), nullable=False)
     
     # Relationships
@@ -22,10 +22,9 @@ class TaxClass(Base):
         return f"<TaxClass {self.name}>"
 
 
-class TaxClassCountryRate(Base):
+class TaxClassCountryRate(BaseModel):
     __tablename__ = 'tax_class_country_rates'
 
-    id = Column(Integer, primary_key=True)
     tax_class_id = Column(Integer, ForeignKey('tax_classes.id'), nullable=True)
     country = Column(String(2), nullable=False)  # ISO country code
     rate = Column(Numeric(12, 4), nullable=False)
@@ -48,10 +47,9 @@ class TaxClassCountryRate(Base):
         return f"<TaxClassCountryRate {self.country}: {self.rate}>"
 
 
-class TaxConfiguration(Base):
+class TaxConfiguration(BaseModel):
     __tablename__ = 'tax_configurations'
 
-    id = Column(Integer, primary_key=True)
     channel_id = Column(Integer, ForeignKey('channels.id'), nullable=False, unique=True)
     charge_taxes = Column(Boolean, default=True)
     tax_calculation_strategy = Column(String(20), nullable=True)
@@ -64,10 +62,9 @@ class TaxConfiguration(Base):
     country_exceptions = relationship('TaxConfigurationPerCountry', back_populates='tax_configuration')
 
 
-class TaxConfigurationPerCountry(Base):
+class TaxConfigurationPerCountry(BaseModel):
     __tablename__ = 'tax_configuration_per_countries'
 
-    id = Column(Integer, primary_key=True)
     tax_configuration_id = Column(Integer, ForeignKey('tax_configurations.id'), nullable=False)
     country = Column(String(2), nullable=False)  # ISO country code
     charge_taxes = Column(Boolean, default=True)

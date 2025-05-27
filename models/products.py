@@ -1,14 +1,14 @@
 from sqlalchemy import Column, String, Text, DateTime, ForeignKey, Integer, Boolean, Float
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
-from .base import Base
 import uuid
 from datetime import datetime
 
-class ProductVariant(Base):
+from models.base import BaseModel
+
+class ProductVariant(BaseModel):
     __tablename__ = 'product_variants'
 
-    id = Column(Integer, primary_key=True)
     sku = Column(String(255), unique=True, nullable=True)
     name = Column(String(255), nullable=True)
     product_id = Column(Integer, ForeignKey('products.id'))
@@ -17,8 +17,6 @@ class ProductVariant(Base):
     preorder_end_date = Column(DateTime, nullable=True)
     preorder_global_threshold = Column(Integer, nullable=True)
     quantity_limit_per_customer = Column(Integer, nullable=True)
-    created_at = Column(DateTime, server_default='now()')
-    updated_at = Column(DateTime, server_default='now()', onupdate='now()')
     private_metadata = Column(JSONB)
     metadata = Column(JSONB)
     
@@ -26,18 +24,15 @@ class ProductVariant(Base):
     media = relationship('ProductMedia', secondary='variant_media', back_populates='variants')
 
 
-class Product(Base):
+class Product(BaseModel):
     __tablename__ = 'products'
 
-    id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
     slug = Column(String(255), unique=True)
     description = Column(JSONB)
     description_plaintext = Column(Text)
     search_document = Column(Text, default="")
     search_index_dirty = Column(Boolean, default=False, index=True)
-    created_at = Column(DateTime, default=datetime.utcnow, index=True)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, index=True)
     rating = Column(Float)
     
     # Relationships
@@ -52,16 +47,12 @@ class Product(Base):
     
     tax_class_id = Column(Integer, ForeignKey('tax_classes.id'))
     tax_class = relationship("TaxClass", back_populates="products")
-    
-    # Metadata fields
-    private_metadata = Column(JSONB, default=dict)
-    metadata = Column(JSONB, default=dict)
 
 
-class ProductType:
+
+class ProductType(BaseModel):
     __tablename__ = 'product_types'
 
-    id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
     slug = Column(String(255), unique=True)
     kind = Column(String(32))
@@ -72,8 +63,3 @@ class ProductType:
     # Relationships
     tax_class_id = Column(Integer, ForeignKey('tax_classes.id'))
     tax_class = relationship("TaxClass", back_populates="product_types")
-    
-    # Metadata fields
-    private_metadata = Column(JSONB, default=dict)
-    metadata = Column(JSONB, default=dict)
-    
