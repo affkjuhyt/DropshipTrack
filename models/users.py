@@ -1,7 +1,5 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, ForeignKey, UUID
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql import func
-from sqlalchemy.dialects.postgresql import JSONB
 import uuid
 from datetime import datetime
 
@@ -13,6 +11,7 @@ class User(BaseModel):
     email = Column(String, unique=True, nullable=False)
     first_name = Column(String(256))
     last_name = Column(String(256))
+    hashed_password = Column(String, nullable=False)
     is_staff = Column(Boolean, default=False)
     is_active = Column(Boolean, default=True)
     is_confirmed = Column(Boolean, default=True)

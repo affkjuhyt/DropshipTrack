@@ -1,13 +1,7 @@
-from decimal import Decimal
-from typing import Optional
-
 from sqlalchemy import Column, String, Boolean, ForeignKey, Numeric, Integer, UniqueConstraint
-from sqlalchemy.orm import relationship, validates
-from sqlalchemy.sql import expression
+from sqlalchemy.orm import relationship
 
 from models.base import BaseModel
-
-from .channel import Channel
 
 
 class TaxClass(BaseModel):

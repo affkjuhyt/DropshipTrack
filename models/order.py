@@ -1,13 +1,10 @@
-from uuid import uuid4
-from datetime import datetime
 from decimal import Decimal
 
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Numeric, Text
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Numeric
 from sqlalchemy.dialects.postgresql import UUID, JSONB
-from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
-from db.fields import MoneyField, TaxedMoneyField, SanitizedJSON
+from db.fields import MoneyField, TaxedMoneyField
 from core.config import settings
 from models.base import BaseModel
 

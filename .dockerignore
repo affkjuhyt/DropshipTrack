@@ -1,6 +1,10 @@
-.*
-**/*.pyc
-*.sqlite
-media
-node_modules
-static
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.env.*
+*.sqlite3
+.git
+.gitignore
+tests/

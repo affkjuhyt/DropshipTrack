@@ -56,7 +56,7 @@ class PermissionsMixin:
     
     def has_perm(self, perm, obj=None):
         """Return True if the user has the specified permission."""
-        if self.is_active and self.is_superuser:
+        if self.is_superuser:
             return True
         # Implementation would depend on your auth backend
         return perm in self.get_all_permissions(obj)

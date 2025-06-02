@@ -1,10 +1,5 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime, Interval
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.sql import func
-from sqlalchemy.ext.hybrid import hybrid_property
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, Boolean, Interval
 
-from db.fields import SanitizedJSON
 from core.config import settings
 from models.base import BaseModel
 

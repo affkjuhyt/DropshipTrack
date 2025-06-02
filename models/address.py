@@ -1,6 +1,5 @@
-from sqlalchemy import ARRAY, Boolean, Column, Integer, String
+from sqlalchemy import ARRAY, Boolean, Column, String
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import JSONB
 
 from models.base import BaseModel
 

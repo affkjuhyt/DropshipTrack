@@ -1,10 +1,7 @@
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, String, Boolean
 from sqlalchemy.orm import relationship
 
 from models.base import BaseModel
-
-from .permission import Permission
-from .channel import Channel
 
 
 class Group(BaseModel):

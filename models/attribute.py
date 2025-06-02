@@ -3,8 +3,6 @@ from sqlalchemy.orm import relationship
 
 from models.base import BaseModel
 
-from .products import Product, ProductType
-
 
 class AssignedProductAttributeValue(BaseModel):
     __tablename__ = 'assigned_product_attribute_values'
@@ -18,11 +16,7 @@ class AssignedProductAttributeValue(BaseModel):
     
     __table_args__ = (
         Index('assignedprodattrval_product_idx', 'product_id'),
-        {'sqlite_autoincrement': True}
     )
-    
-    def get_ordering_queryset(self):
-        return self.product.attributevalues
 
 
 class AttributeProduct(BaseModel):
@@ -34,10 +28,3 @@ class AttributeProduct(BaseModel):
     
     attribute = relationship("Attribute", back_populates="attributeproduct")
     product_type = relationship("ProductType", back_populates="attributeproduct")
-    
-    __table_args__ = (
-        {'sqlite_autoincrement': True}
-    )
-    
-    def get_ordering_queryset(self):
-        return self.product_type.attributeproduct

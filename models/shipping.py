@@ -1,26 +1,14 @@
-from decimal import Decimal
-from typing import TYPE_CHECKING, Optional, List
-
-from sqlalchemy import Column, String, Boolean, Text, ForeignKey, Integer, Numeric, or_, and_
-from sqlalchemy.orm import relationship, validates
+from sqlalchemy import Column, String, Boolean, Text, ForeignKey, Integer, Numeric
+from sqlalchemy.orm import relationship
 from sqlalchemy.ext.hybrid import hybrid_property
 
 from models.base import BaseModel
-
-from .channel import Channel
-from .products import Product
-from db.fields import MoneyField, SanitizedJSONField
-
-if TYPE_CHECKING:
-    from .address import Address
-    from .order import Order
 
 
 class ShippingZone(BaseModel):
     __tablename__ = 'shipping_zones'
 
     name = Column(String(100), nullable=False)
-    countries = Column(SanitizedJSONField, default=list)
     default = Column(Boolean, default=False)
     description = Column(Text, nullable=True)
     
