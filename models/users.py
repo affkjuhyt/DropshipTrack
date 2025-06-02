@@ -22,16 +22,23 @@ class User(BaseModel):
     jwt_token_key = Column(String(12), default=lambda: str(uuid.uuid4())[:12])
     language_code = Column(String(35))
     search_document = Column(Text, default="")
+    # These should remain Integer to match the addresses table
+    default_shipping_address_id = Column(Integer, ForeignKey('addresses.id', use_alter=True, name='fk_user_shipping_address'))
+    default_billing_address_id = Column(Integer, ForeignKey('addresses.id', use_alter=True, name='fk_user_billing_address'))
+    
+    # This UUID field is fine as it's not a foreign key
     uuid = Column(UUID(as_uuid=True), default=uuid.uuid4, unique=True)
     
     # Relationships
     addresses = relationship("Address", secondary="user_addresses", back_populates="users")
-    default_shipping_address_id = Column(Integer, ForeignKey('addresses.id'))
-    default_shipping_address = relationship("Address", foreign_keys=[default_shipping_address_id])
-    default_billing_address_id = Column(Integer, ForeignKey('addresses.id'))
+    default_shipping_address_id = Column(UUID(as_uuid=True), ForeignKey('addresses.id', use_alter=True, name='fk_user_shipping_address'))
+    default_billing_address_id = Column(UUID(as_uuid=True), ForeignKey('addresses.id', use_alter=True, name='fk_user_billing_address'))
     default_billing_address = relationship("Address", foreign_keys=[default_billing_address_id])
     
     # Permission related fields
     is_superuser = Column(Boolean, default=False)
     groups = relationship("Group", secondary="user_groups", back_populates="users")
     user_permissions = relationship("Permission", secondary="user_user_permissions", back_populates="users")
+    
+    # Add this to the relationships section
+    orders = relationship('Order', back_populates='user')

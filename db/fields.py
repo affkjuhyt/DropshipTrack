@@ -1,12 +1,9 @@
-import json
 from collections.abc import Callable
-from decimal import Decimal
 from functools import total_ordering
-from typing import Any, Dict
+from typing import Dict
 
 from sqlalchemy import TypeDecorator, types
-from sqlalchemy.ext.hybrid import hybrid_property
-from prices import Money, TaxedMoney
+from core.money import Money, TaxedMoney
 
 
 class SanitizedJSON(TypeDecorator):

@@ -18,4 +18,5 @@ class Category(BaseModel):
     seo_description = Column(String)
     
     parent = relationship('Category', remote_side=[id], back_populates='children')
+    products = relationship('Product', back_populates='category')
     children = relationship('Category', back_populates='parent')

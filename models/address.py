@@ -3,7 +3,6 @@ from sqlalchemy.orm import relationship
 
 from models.base import BaseModel
 
-
 class Address(BaseModel):
     __tablename__ = 'addresses'
 

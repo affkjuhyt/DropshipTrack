@@ -8,6 +8,7 @@ class TaxClass(BaseModel):
     __tablename__ = 'tax_classes'
 
     name = Column(String(255), nullable=False)
+    products = relationship('Product', back_populates='tax_class')
     
     # Relationships
     country_rates = relationship('TaxClassCountryRate', back_populates='tax_class')
@@ -28,13 +29,6 @@ class TaxClassCountryRate(BaseModel):
 
     __table_args__ = (
         UniqueConstraint('country', 'tax_class_id', name='unique_country_tax_class'),
-        UniqueConstraint(
-            'country', 
-            name='unique_country_without_tax_class',
-            sqlite_where=(tax_class_id == None),
-            postgresql_where=(tax_class_id == None),
-            mssql_where=(tax_class_id == None)
-        ),
     )
 
     def __repr__(self):
@@ -44,7 +38,7 @@ class TaxClassCountryRate(BaseModel):
 class TaxConfiguration(BaseModel):
     __tablename__ = 'tax_configurations'
 
-    channel_id = Column(Integer, ForeignKey('channels.id'), nullable=False, unique=True)
+    channel_id = Column(Integer, ForeignKey('channel.id'), nullable=False, unique=True)
     charge_taxes = Column(Boolean, default=True)
     tax_calculation_strategy = Column(String(20), nullable=True)
     display_gross_prices = Column(Boolean, default=True)

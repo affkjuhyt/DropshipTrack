@@ -1,7 +1,31 @@
-from sqlalchemy import Column, ForeignKey, Index, Integer
+from sqlalchemy import Column, ForeignKey, Index, Integer, String, Boolean
 from sqlalchemy.orm import relationship
 
 from models.base import BaseModel
+
+
+class Attribute(BaseModel):
+    __tablename__ = 'attributes'
+    
+    name = Column(String(255), nullable=False)
+    slug = Column(String(255), nullable=False, unique=True)
+    input_type = Column(String(50), nullable=False)
+    is_variant_only = Column(Boolean, default=False)
+    
+    # Relationships
+    values = relationship("AttributeValue", back_populates="attribute")
+    attributeproduct = relationship("AttributeProduct", back_populates="attribute")
+
+
+class AttributeValue(BaseModel):
+    __tablename__ = 'attribute_values'
+    
+    name = Column(String(255), nullable=False)
+    attribute_id = Column(Integer, ForeignKey('attributes.id'), nullable=False)
+    
+    # Relationships
+    attribute = relationship("Attribute", back_populates="values")
+    productvalueassignment = relationship("AssignedProductAttributeValue", back_populates="value")
 
 
 class AssignedProductAttributeValue(BaseModel):

@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Boolean, Interval
+from sqlalchemy.orm import validates
 
 from core.config import settings
 from models.base import BaseModel
@@ -24,3 +25,15 @@ class Channel(BaseModel):
     automatically_complete_fully_paid_checkouts = Column(Boolean, default=False)
     draft_order_line_price_freeze_period = Column(Integer, nullable=True)
     use_legacy_line_discount_propagation_for_order = Column(Boolean, default=True)
+    
+    @validates('currency_code')
+    def validate_currency(self, key, value):
+        if not value or len(value) != 3:
+            raise ValueError('Currency code must be 3 characters')
+        return value.upper()
+
+    @validates('default_country')
+    def validate_country(self, key, value):
+        if not value or len(value) != 2:
+            raise ValueError('Country code must be 2 characters')
+        return value.upper()

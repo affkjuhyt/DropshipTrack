@@ -35,6 +35,7 @@ class ShippingMethod(BaseModel):
     shipping_zone = relationship('ShippingZone', back_populates='shipping_methods')
     channel_listings = relationship('ShippingMethodChannelListing', back_populates='shipping_method')
     excluded_products = relationship('Product', secondary='shipping_method_excluded_products')
+    orders = relationship('Order', back_populates='shipping_method')
 
     @hybrid_property
     def is_price_based(self):
@@ -49,7 +50,7 @@ class ShippingMethodChannelListing(BaseModel):
     __tablename__ = 'shipping_method_channel_listings'
 
     shipping_method_id = Column(Integer, ForeignKey('shipping_methods.id'), nullable=False)
-    channel_id = Column(Integer, ForeignKey('channels.id'), nullable=False)
+    channel_id = Column(Integer, ForeignKey('channel.id'), nullable=False)
     price_amount = Column(Numeric(12, 2), nullable=False)
     currency = Column(String(3), nullable=False)
     minimum_order_price_amount = Column(Numeric(12, 2), nullable=True)

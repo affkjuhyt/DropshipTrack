@@ -5,6 +5,19 @@ from sqlalchemy.ext.declarative import declared_attr
 from models.base import BaseModel
 
 
+class ContentType(BaseModel):
+    __tablename__ = 'content_types'
+    
+    app_label = Column(String(100), nullable=False)
+    model = Column(String(100), nullable=False)
+    
+    # Relationships
+    permissions = relationship('Permission', back_populates='content_type')
+    
+    def __repr__(self):
+        return f"<ContentType {self.app_label}.{self.model}>"
+
+
 class Permission(BaseModel):
     __tablename__ = 'permissions'
 

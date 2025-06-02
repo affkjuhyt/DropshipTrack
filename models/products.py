@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Text, DateTime, ForeignKey, Integer, Boolean, Float
+from sqlalchemy import Column, Index, String, Text, DateTime, ForeignKey, Integer, Boolean, Float
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 
@@ -15,8 +15,6 @@ class ProductVariant(BaseModel):
     preorder_end_date = Column(DateTime, nullable=True)
     preorder_global_threshold = Column(Integer, nullable=True)
     quantity_limit_per_customer = Column(Integer, nullable=True)
-    private_metadata = Column(JSONB)
-    metadata = Column(JSONB)
     
     product = relationship('Product', back_populates='variants')
     media = relationship('ProductMedia', secondary='variant_media', back_populates='variants')
@@ -37,14 +35,19 @@ class Product(BaseModel):
     product_type_id = Column(Integer, ForeignKey('product_types.id'))
     product_type = relationship("ProductType", back_populates="products")
     
-    category_id = Column(Integer, ForeignKey('categories.id'))
-    category = relationship("Category", back_populates="products")
+    category_id = Column(Integer, ForeignKey('categories.id'), nullable=True)
+    category = relationship('Category', back_populates='products')
     
-    default_variant_id = Column(Integer, ForeignKey('product_variants.id'))
+    default_variant_id = Column(Integer, ForeignKey('product_variants.id', use_alter=True, name='fk_product_default_variant'))
     default_variant = relationship("ProductVariant", foreign_keys=[default_variant_id])
     
-    tax_class_id = Column(Integer, ForeignKey('tax_classes.id'))
-    tax_class = relationship("TaxClass", back_populates="products")
+    tax_class_id = Column(Integer, ForeignKey('tax_classes.id'), nullable=True)
+    tax_class = relationship('TaxClass', back_populates='products')
+    
+    __table_args__ = (
+        Index('idx_product_slug', slug),
+        Index('idx_product_name', name),
+    )
 
 
 
