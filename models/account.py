@@ -14,7 +14,6 @@ class Account(BaseModel):
     balance = Column(Numeric(precision=18, scale=6))
     
     children = relationship('Account', back_populates='parent')
-    parent = relationship('Account', remote_side=[id], back_populates='children')
     journal_items = relationship('JournalItem', back_populates='account')
 
 class JournalEntry(BaseModel):

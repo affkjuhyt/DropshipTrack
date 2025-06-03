@@ -21,3 +21,4 @@ class Address(BaseModel):
     
     # Relationships
     users = relationship("User", secondary="user_addresses", back_populates="addresses")
+    warehouses = relationship('Warehouse', back_populates='address')

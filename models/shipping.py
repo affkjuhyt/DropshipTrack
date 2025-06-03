@@ -3,6 +3,8 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.ext.hybrid import hybrid_property
 
 from models.base import BaseModel
+from models.products import Product  # Add this import
+from models.associations import shipping_method_excluded_products  # Add this import
 
 
 class ShippingZone(BaseModel):

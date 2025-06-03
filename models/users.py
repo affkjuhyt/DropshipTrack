@@ -4,7 +4,9 @@ import uuid
 from datetime import datetime
 
 from models.base import BaseModel
-from models.group import Group  # Add this import
+from models.group import Group
+from models.address import Address
+from models.order import Order  # Add this import
 
 # Define the user_addresses association table
 user_addresses = Table('user_addresses', BaseModel.metadata,

@@ -1,25 +1,37 @@
 import datetime
-from optparse import Option
+from typing import Optional
 from pydantic import BaseModel, EmailStr
 
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
-    first_name: Option[str] = None
-    last_name: Option[str] = None
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
     
+    class Config:
+        alias_generator = lambda string: ''.join(
+            word.capitalize() if i > 0 else word.lower()
+            for i, word in enumerate(string.split('_'))
+        )
+        populate_by_alias = True
+        allow_population_by_field_name = True
 
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
+    class Config:
+        extra = 'forbid'
+
 
 class UserResponse(BaseModel):
     email: str
-    first_name: Option[str] = None
-    last_name: Option[str] = None
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
     is_active: bool
     date_joined: datetime
     
-    class Config:
-        from_attributes = True
+    model_config = {
+        'from_attributes': True,
+        'arbitrary_types_allowed': True
+    }

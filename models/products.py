@@ -3,6 +3,9 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 
 from models.base import BaseModel
+from models.associations import variant_media
+from models.categories import Category
+from models.tax import TaxClass  # Add this import
 
 class ProductVariant(BaseModel):
     __tablename__ = 'product_variants'
@@ -16,7 +19,10 @@ class ProductVariant(BaseModel):
     preorder_global_threshold = Column(Integer, nullable=True)
     quantity_limit_per_customer = Column(Integer, nullable=True)
     
-    product = relationship('Product', back_populates='variants')
+    # Update the relationship with explicit foreign keys
+    product = relationship('Product', 
+                          foreign_keys=[product_id],
+                          back_populates='variants')
     media = relationship('ProductMedia', secondary='variant_media', back_populates='variants')
 
 
@@ -38,11 +44,19 @@ class Product(BaseModel):
     category_id = Column(Integer, ForeignKey('categories.id'), nullable=True)
     category = relationship('Category', back_populates='products')
     
+    # Add the variants relationship
+    variants = relationship('ProductVariant',
+                           foreign_keys='[ProductVariant.product_id]',
+                           back_populates='product')
+    
     default_variant_id = Column(Integer, ForeignKey('product_variants.id', use_alter=True, name='fk_product_default_variant'))
-    default_variant = relationship("ProductVariant", foreign_keys=[default_variant_id])
+    default_variant = relationship('ProductVariant', foreign_keys=[default_variant_id])
     
     tax_class_id = Column(Integer, ForeignKey('tax_classes.id'), nullable=True)
     tax_class = relationship('TaxClass', back_populates='products')
+    
+    # Add the stock_movements relationship
+    stock_movements = relationship('StockMovement', back_populates='product')
     
     __table_args__ = (
         Index('idx_product_slug', slug),
@@ -64,3 +78,17 @@ class ProductType(BaseModel):
     # Relationships
     tax_class_id = Column(Integer, ForeignKey('tax_classes.id'))
     tax_class = relationship("TaxClass", back_populates="product_types")
+    # Add the products relationship
+    products = relationship("Product", back_populates="product_type")
+
+
+class ProductMedia(BaseModel):
+    __tablename__ = 'product_media'
+
+    alt = Column(String(255), nullable=True)
+    type = Column(String(50), nullable=False)  # image, video, etc.
+    external_url = Column(String(2048), nullable=True)
+    oembed_data = Column(JSONB, nullable=True)
+    
+    # Relationships
+    variants = relationship('ProductVariant', secondary='variant_media', back_populates='media')

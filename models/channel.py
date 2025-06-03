@@ -3,7 +3,7 @@ from sqlalchemy.orm import validates, relationship
 
 from core.config import settings
 from models.base import BaseModel
-from models.group import Group, group_channels
+from models.associations import group_channels, shipping_zone_channels
 
 class Channel(BaseModel):
     __tablename__ = 'channel'
@@ -29,6 +29,12 @@ class Channel(BaseModel):
     
     # Add relationship with Group
     groups = relationship('Group', secondary=group_channels, back_populates='channels')
+    # Add relationship with ShippingZone
+    shipping_zones = relationship('ShippingZone', secondary=shipping_zone_channels, back_populates='channels')
+    # Add relationship with TaxConfiguration
+    tax_configuration = relationship('TaxConfiguration', back_populates='channel', uselist=False)
+    # Add relationship with Order
+    orders = relationship('Order', back_populates='channel')
     
     @validates('currency_code')
     def validate_currency(self, key, value):

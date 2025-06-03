@@ -17,6 +17,10 @@ class Category(BaseModel):
     seo_title = Column(String)
     seo_description = Column(String)
     
-    parent = relationship('Category', remote_side=[id], back_populates='children')
+    # Fix the self-referential relationship
+    parent = relationship('Category',
+                         primaryjoin='Category.parent_id == Category.id',
+                         remote_side='Category.id',
+                         back_populates='children')
     products = relationship('Product', back_populates='category')
     children = relationship('Category', back_populates='parent')

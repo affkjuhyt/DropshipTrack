@@ -7,6 +7,8 @@ from sqlalchemy.orm import relationship
 from db.fields import MoneyField, TaxedMoneyField
 from core.config import settings
 from models.base import BaseModel
+from models.shipping import ShippingMethod  # Add this import
+from models.stock import Warehouse  # Add this import
 
 class Order(BaseModel):
     __tablename__ = 'order'
@@ -20,9 +22,7 @@ class Order(BaseModel):
     charge_status = Column(String(32), default='NONE', index=True)
     
     user_id = Column(Integer, ForeignKey('users.id'), nullable=True)
-    original_id = Column(Integer, ForeignKey('order.id'), nullable=True)
     user = relationship('User', back_populates='orders', foreign_keys=[user_id])
-    original = relationship('Order', remote_side=[BaseModel.id])
     
     language_code = Column(String(35), default=settings.LANGUAGE_CODE)
     tracking_client_id = Column(String(36))

@@ -2,19 +2,9 @@ from sqlalchemy import Column, String, Boolean, Integer, ForeignKey, Table
 from sqlalchemy.orm import relationship
 
 from models.base import BaseModel
-from models.permission import Permission  # Add this import
-
-# Define the group_permissions association table
-group_permissions = Table('group_permissions', BaseModel.metadata,
-    Column('group_id', Integer, ForeignKey('groups.id'), primary_key=True),
-    Column('permission_id', Integer, ForeignKey('permissions.id'), primary_key=True)
-)
-
-# Define the group_channels association table
-group_channels = Table('group_channels', BaseModel.metadata,
-    Column('group_id', Integer, ForeignKey('groups.id'), primary_key=True),
-    Column('channel_id', Integer, ForeignKey('channel.id'), primary_key=True)
-)
+from models.permission import Permission
+from models.channel import Channel
+from models.associations import group_channels, group_permissions
 
 class Group(BaseModel):
     __tablename__ = 'groups'
