@@ -27,6 +27,8 @@ class Permission(BaseModel):
     
     # Relationships
     content_type = relationship('ContentType', back_populates='permissions')
+    groups = relationship('Group', secondary='group_permissions', back_populates='permissions')  # Add this line
+    users = relationship('User', secondary='user_user_permissions', back_populates='user_permissions')  # Add this line
 
     def __repr__(self):
         return f"<Permission {self.content_type} | {self.name}>"

@@ -1,8 +1,9 @@
 from sqlalchemy import Column, Integer, String, Boolean, Interval
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import validates, relationship
 
 from core.config import settings
 from models.base import BaseModel
+from models.group import Group, group_channels
 
 class Channel(BaseModel):
     __tablename__ = 'channel'
@@ -25,6 +26,9 @@ class Channel(BaseModel):
     automatically_complete_fully_paid_checkouts = Column(Boolean, default=False)
     draft_order_line_price_freeze_period = Column(Integer, nullable=True)
     use_legacy_line_discount_propagation_for_order = Column(Boolean, default=True)
+    
+    # Add relationship with Group
+    groups = relationship('Group', secondary=group_channels, back_populates='channels')
     
     @validates('currency_code')
     def validate_currency(self, key, value):

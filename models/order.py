@@ -21,8 +21,8 @@ class Order(BaseModel):
     
     user_id = Column(Integer, ForeignKey('users.id'), nullable=True)
     original_id = Column(Integer, ForeignKey('order.id'), nullable=True)
-    user = relationship('User', back_populates='orders')
-    original = relationship('Order', remote_side=[id])
+    user = relationship('User', back_populates='orders', foreign_keys=[user_id])
+    original = relationship('Order', remote_side=[BaseModel.id])
     
     language_code = Column(String(35), default=settings.LANGUAGE_CODE)
     tracking_client_id = Column(String(36))
