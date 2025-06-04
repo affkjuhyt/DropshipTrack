@@ -82,14 +82,20 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
+    print("creating token data: ", credentials_exception)
     
     try:
+        print("token: ", token)
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        print("payload: ", payload)
         username: str = payload.get("sub")
+        print("username: ", username)
         if username is None:
             raise credentials_exception
         token_data = TokenData(username=username)
-    except JWTError:
+        print("token_data: ", token_data)
+    except JWTError as e:
+        print("error: ", e)
         raise credentials_exception
 
     return token_data
@@ -97,6 +103,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 async def get_current_active_user(current_user = Depends(get_current_user), db: Session = Depends(get_db)):
     """Get the current active user."""
     user = db.query(User).filter(User.email == current_user.username).first()
+    print("user: ", user)
 
     if not user:
         raise HTTPException(

@@ -29,7 +29,7 @@ def cors_handler(application: ASGI3Application) -> ASGI3Application:
                 
         origin_match = False
         if request_origin:
-            for allowed_origin in settings.ALLOWED_ORIGINS:
+            for allowed_origin in settings.BACKEND_CORS_ORIGINS:  # Sửa từ ALLOWED_ORIGINS thành BACKEND_CORS_ORIGINS
                 if fnmatchcase(request_origin, allowed_origin):
                     origin_match = True
                     break
@@ -40,7 +40,7 @@ def cors_handler(application: ASGI3Application) -> ASGI3Application:
                 (b"access-control-allow-credentials", b"true"),
                 (b"access-control-allow-headers", 
                  b"Origin, Content-Type, Accept, Authorization"),
-                (b"access-control-allow-methods", b"POST, OPTIONS"),
+                (b"access-control-allow-methods", b"GET, POST, PUT, DELETE, OPTIONS"),  # Thêm các phương thức HTTP cần thiết
                 (b"access-control-max-age", b"600"),
                 (b"vary", b"Origin"),
             ]

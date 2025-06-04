@@ -44,26 +44,6 @@ async def create_user(payload: UserCreate, db: Session = Depends(get_db)):
         )
         
 
-@router.post("/login", response_model=Token)
-async def login(user_credentials: UserLogin, db: Session = Depends(get_db)):
-    """Authenticate a user and return access & refresh tokens."""
-    user = db.query(User).filter(User.email == user_credentials.email).first()
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-        
-    if not verify_password(user_credentials.password, user.hashed_password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-        
-    return create_tokens(data={"sub": user.email, "user_id": str(user.uuid)})
-
 @router.post("/refresh", response_model=Token)
 async def refresh_token(refresh_token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     """Get new access token using refresh token."""
@@ -104,4 +84,5 @@ async def logout(current_user: User = Depends(get_current_active_user)):
 @router.get("/me", response_model=UserResponse)
 async def read_users_me(current_user: User = Depends(get_current_active_user)):
     """Get current user information"""
+    print("current_user: ", current_user)
     return current_user
