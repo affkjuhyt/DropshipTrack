@@ -22,3 +22,5 @@ class Address(BaseModel):
     # Relationships
     users = relationship("User", secondary="user_addresses", back_populates="addresses")
     warehouses = relationship('Warehouse', back_populates='address')
+    billing_customers = relationship('Customer', foreign_keys='Customer.billing_address_id', back_populates='billing_address')
+    shipping_customers = relationship('Customer', foreign_keys='Customer.shipping_address_id', back_populates='shipping_address')

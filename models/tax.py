@@ -10,10 +10,9 @@ class TaxClass(BaseModel):
     name = Column(String(255), nullable=False)
     products = relationship('Product', back_populates='tax_class')
     
-    # Relationships
     country_rates = relationship('TaxClassCountryRate', back_populates='tax_class')
-    # Add the product_types relationship
     product_types = relationship('ProductType', back_populates='tax_class')
+    categories = relationship('Category', back_populates='tax_class')
 
     def __repr__(self):
         return f"<TaxClass {self.name}>"

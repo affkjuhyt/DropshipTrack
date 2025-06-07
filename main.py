@@ -3,10 +3,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from api.public.health import router as health_router
 from api.public.users import router as user_router
 from api.public.auth import router as auth_router
-from core.security import get_current_active_user
+# from api.public.categories import router as categories_router
+from api.private.customers import router as customer_router
 from core.config import settings
 
-app = FastAPI()
+app = FastAPI(
+    title="Dropship Tracker API",
+    description="API for managing dropshipping operations",
+    version="1.0.0",
+    docs_url="/docs",  # Swagger UI endpoint
+    redoc_url="/redoc",  # ReDoc endpoint
+    openapi_url="/openapi.json"  # OpenAPI schema endpoint
+)
 
 # Add CORS middleware
 app.add_middleware(
@@ -20,8 +28,7 @@ app.add_middleware(
 app.include_router(health_router)
 app.include_router(auth_router)
 app.include_router(user_router)
+# app.include_router(categories_router)
 
-@app.get("/")
-def read_root():
-    return {"message": "Hello, World!"}
-
+# Add private routes
+app.include_router(customer_router)

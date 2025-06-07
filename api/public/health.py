@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy import text
 from db.session import SessionLocal
 
-router = APIRouter(prefix="/api", tags=["health"])
+router = APIRouter(prefix="/api/health", tags=["health"])
 
 @router.get("/health", status_code=status.HTTP_200_OK)
 async def health_check():
