@@ -1,13 +1,14 @@
 from typing import Optional, List
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, Field
 from datetime import datetime
-import enum
+from enum import Enum
 
-class CustomerType(enum.Enum):
+class CustomerType(Enum):
     INDIVIDUAL = "individual"
-    BUSINESS = "business"
+    COMPANY = "company"
+    PARTNERSHIP = "partnership"
 
-class CustomerStatus(enum.Enum):
+class CustomerStatus(Enum):
     ACTIVE = "active"
     INACTIVE = "inactive"
     LEAD = "lead"
@@ -15,7 +16,7 @@ class CustomerStatus(enum.Enum):
 class CustomerBase(BaseModel):
     customer_name: str = Field(alias="customerName")
     customer_type: CustomerType = Field(alias="customerType")
-    email: Optional[EmailStr] = None
+    email: Optional[str] = None
     phone: Optional[str] = None
     address_line1: Optional[str] = Field(None, alias="addressLine1")
     address_line2: Optional[str] = Field(None, alias="addressLine2")
