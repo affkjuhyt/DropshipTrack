@@ -34,7 +34,7 @@ async def create_product(product_data: ProductCreate, db: Session = Depends(get_
     product = Product(
         name=product_data.name,
         status=product_data.status,
-        # category_id=product_data.category_id,
+        category_id=product_data.category_id,
     )
     db.add(product)
     db.flush()
@@ -42,7 +42,6 @@ async def create_product(product_data: ProductCreate, db: Session = Depends(get_
     product_variant = ProductVariant(
         sku=product_data.sku,
         name=product_data.name,
-        price_amount=product_data.price,
         product_id=product.id,
     )
     db.add(product_variant)
@@ -50,10 +49,8 @@ async def create_product(product_data: ProductCreate, db: Session = Depends(get_
 
     stock_movement = StockMovement(
         product_variant_id=product_variant.id,
-        quantity=product_data.quantity,
         type="none",
         reference="manual",
-        unit_cost=product_data.price,
     )
     db.add(stock_movement)
 

@@ -7,11 +7,11 @@ from models.base import BaseModel
 class Category(BaseModel):
     __tablename__ = 'categories'
 
-    name = Column(String(250))
-    slug = Column(String(255), unique=True)
-    description = Column(JSONB)
-    parent_id = Column(Integer, ForeignKey('categories.id'))
-    tax_class_id = Column(Integer, ForeignKey('tax_classes.id'))
+    name = Column(String(250), unique=True)
+    slug = Column(String(255), nullable=True)
+    description = Column(String(255), nullable=True)
+    parent_id = Column(Integer, ForeignKey('categories.id'), nullable=True)
+    tax_class_id = Column(Integer, ForeignKey('tax_classes.id'), nullable=True)
     
     parent = relationship('Category',
                          primaryjoin='Category.parent_id == Category.id',

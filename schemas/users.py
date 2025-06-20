@@ -14,7 +14,7 @@ class UserCreate(BaseModel):
             for i, word in enumerate(string.split('_'))
         )
         populate_by_alias = True
-        allow_population_by_field_name = True
+        validate_by_name = True
 
 class UserLogin(BaseModel):
     email: EmailStr
