@@ -15,14 +15,14 @@ class Warehouse(BaseModel):
 
 class StockMovement(BaseModel):
     __tablename__ = 'stock_movements'
-    product_id = Column(Integer, ForeignKey('products.id'))
+    product_variant_id = Column(Integer, ForeignKey('product_variants.id'))
     warehouse_id = Column(Integer, ForeignKey('warehouses.id'))
     quantity = Column(Numeric(precision=10, scale=2))
     type = Column(String(32))  # in, out, transfer
     reference = Column(String(64))
     unit_cost = Column(Numeric(precision=18, scale=6))
     
-    product = relationship('Product', back_populates='stock_movements')
+    product_variant = relationship('ProductVariant', back_populates='stock_movements')
     warehouse = relationship('Warehouse', back_populates='stock_movements')
 
 class InventoryAdjustment(BaseModel):

@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     KAFKA_BROKER: str
     
     # CORS Settings
-    BACKEND_CORS_ORIGINS: list = ["http://localhost:8000", "http://localhost:3000"]
+    BACKEND_CORS_ORIGINS: list = ["http://localhost:8000", "http://localhost:3000", "http://localhost:3001"]
     
     # Default Currency Settings
     DEFAULT_CURRENCY_CODE_LENGTH: int = 3

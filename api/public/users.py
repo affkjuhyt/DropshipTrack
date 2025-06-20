@@ -1,48 +1,15 @@
-from sqlite3 import IntegrityError
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
-from core.security import ALGORITHM, REFRESH_SECRET_KEY, Token, create_tokens, get_current_active_user, get_password_hash, oauth2_scheme, verify_password
+from core.security import ALGORITHM, REFRESH_SECRET_KEY, Token, create_tokens, get_current_active_user, oauth2_scheme
 from db.session import get_db
-from schemas.users import UserCreate, UserLogin, UserResponse
+from schemas.users import UserResponse
 from models.users import User
 
 router = APIRouter(prefix="/api/users", tags=["users"])
 
-@router.post("/signup", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
-async def create_user(payload: UserCreate, db: Session = Depends(get_db)):
-    """
-    Create a new user.
-    """
-    existing_user = db.query(User).filter(User.email == payload.email).first()
-    if existing_user:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="User with this email already exists",
-        )
-        
-    user = User(
-        email=payload.email,
-        first_name=payload.first_name,
-        last_name=payload.last_name,
-        hashed_password=get_password_hash(payload.password)
-    )
-    
-    try:
-        db.add(user)
-        db.commit()
-        db.refresh(user)
-        
-        return user
-    except IntegrityError:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Error creating user",
-        )
-        
 
 @router.post("/refresh", response_model=Token)
 async def refresh_token(refresh_token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):

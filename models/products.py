@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Index, String, Text, DateTime, ForeignKey, Integer, Boolean, Float
+from sqlalchemy import Column, Index, Numeric, String, Text, DateTime, ForeignKey, Integer, Boolean, Float
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 
@@ -19,11 +19,19 @@ class ProductVariant(BaseModel):
     preorder_global_threshold = Column(Integer, nullable=True)
     quantity_limit_per_customer = Column(Integer, nullable=True)
     
+    price_amount = Column(Numeric(10, 2), nullable=False)
+    currency_code = Column(String(3), default='USD')
+    
+    sale_price = Column(Numeric(10, 2), nullable=True)
+    sale_start = Column(DateTime, nullable=True)
+    sale_end = Column(DateTime, nullable=True)
+    
     # Update the relationship with explicit foreign keys
     product = relationship('Product', 
                           foreign_keys=[product_id],
                           back_populates='variants')
     media = relationship('ProductMedia', secondary='variant_media', back_populates='variants')
+    stock_movements = relationship('StockMovement', back_populates='product_variant')
 
 
 class Product(BaseModel):
@@ -36,6 +44,7 @@ class Product(BaseModel):
     search_document = Column(Text, default="")
     search_index_dirty = Column(Boolean, default=False, index=True)
     rating = Column(Float)
+    status = Column(String(20), default='active')
     
     # Relationships
     product_type_id = Column(Integer, ForeignKey('product_types.id'))
@@ -54,9 +63,6 @@ class Product(BaseModel):
     
     tax_class_id = Column(Integer, ForeignKey('tax_classes.id'), nullable=True)
     tax_class = relationship('TaxClass', back_populates='products')
-    
-    # Add the stock_movements relationship
-    stock_movements = relationship('StockMovement', back_populates='product')
     
     __table_args__ = (
         Index('idx_product_slug', slug),
