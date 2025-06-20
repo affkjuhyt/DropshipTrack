@@ -19,7 +19,7 @@ class ProductVariant(BaseModel):
     preorder_global_threshold = Column(Integer, nullable=True)
     quantity_limit_per_customer = Column(Integer, nullable=True)
     
-    price_amount = Column(Numeric(10, 2), nullable=False)
+    price_amount = Column(Numeric(10, 2), nullable=True)
     currency_code = Column(String(3), default='USD')
     
     sale_price = Column(Numeric(10, 2), nullable=True)
